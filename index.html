@@ -1,134 +1,947 @@
 <!doctype html>
 <html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>André Sousa - Produção Visual</title>
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>André Sousa - Produção Visual</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+    html, body, #app {
+      height: 100%;
+      width: 100%;
+    }
 
-<style>
-body {
-  background:#0f0f0f;
-  color:#fff;
-  font-family: Arial;
-}
+    body {
+      font-family: 'Playfair Display', 'Georgia', serif;
+      background: #0f0f0f;
+      color: #f5f5f5;
+    }
 
-/* PORTFOLIO */
-.portfolio-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:20px;
-  padding:40px;
-}
+    .app-wrapper {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
 
-.portfolio-item {
-  border:1px solid rgba(212,175,119,0.3);
-  padding:40px;
-  text-align:center;
-  cursor:pointer;
-  transition:.3s;
-}
+    .main-content {
+      flex: 1;
+      overflow-y: auto;
+      width: 100%;
+    }
 
-.portfolio-item:hover {
-  transform:translateY(-5px);
-  border-color:#d4af77;
-}
+    /* Navbar */
+    .navbar {
+      background: rgba(15, 15, 15, 0.98);
+      border-bottom: 1px solid rgba(212, 175, 119, 0.15);
+      position: sticky;
+      top: 0;
+      z-50;
+      backdrop-filter: blur(10px);
+      height: 70px;
+      display: flex;
+      align-items: center;
+    }
 
-/* GALERIA */
-#gallery-modal {
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.95);
-  z-index:9999;
-  padding:40px;
-  overflow:auto;
-}
+    .navbar-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
 
-#gallery-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:20px;
-}
+    .logo {
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+      color: #d4af77;
+    }
 
-#gallery-grid img {
-  width:100%;
-  border-radius:6px;
-}
-</style>
-</head>
+    .nav-menu {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
 
-<body>
+    .nav-link {
+      cursor: pointer;
+      padding: 8px 12px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      color: #999;
+      text-decoration: none;
+      position: relative;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+      font-family: 'Segoe UI', sans-serif;
+      border: none;
+      background: none;
+    }
 
-<h1 style="text-align:center; margin-top:40px;">PORTFÓLIO</h1>
+    .nav-link.active {
+      color: #d4af77;
+    }
 
-<div class="portfolio-grid">
+    .nav-link:hover {
+      color: #d4af77;
+    }
 
-  <div class="portfolio-item" onclick="openGallery('negocios')">Negócios</div>
-  <div class="portfolio-item" onclick="openGallery('ensaios')">Ensaios</div>
-  <div class="portfolio-item" onclick="openGallery('eventos')">Eventos</div>
-  <div class="portfolio-item" onclick="openGallery('videos')">Vídeos</div>
-  <div class="portfolio-item" onclick="openGallery('comerciais')">Comerciais</div>
-  <div class="portfolio-item" onclick="openGallery('destaques')">Destaques</div>
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #d4af77;
+    }
 
-</div>
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: #d4af77;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+    }
 
-<!-- MODAL -->
-<div id="gallery-modal">
-  <button onclick="closeGallery()" style="position:absolute; top:20px; right:30px; font-size:30px; background:none; border:none; color:white;">✕</button>
+    /* Pages */
+    .page {
+      display: none;
+      width: 100%;
+      animation: fadeInPage 0.5s ease;
+    }
 
-  <h2 id="gallery-title" style="text-align:center; margin-bottom:30px;"></h2>
+    .page.active {
+      display: block;
+    }
 
-  <div id="gallery-grid"></div>
-</div>
+    @keyframes fadeInPage {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
 
-<script>
-const galleries = {
-  negocios: [
-    "https://via.placeholder.com/600x400?text=Negocios+1",
-    "https://via.placeholder.com/600x400?text=Negocios+2"
-  ],
-  ensaios: [
-    "https://via.placeholder.com/600x400?text=Ensaios+1",
-    "https://via.placeholder.com/600x400?text=Ensaios+2"
-  ],
-  eventos: [
-    "https://via.placeholder.com/600x400?text=Eventos+1"
-  ],
-  videos: [
-    "https://via.placeholder.com/600x400?text=Videos+1"
-  ],
-  comerciais: [
-    "https://via.placeholder.com/600x400?text=Comerciais+1"
-  ],
-  destaques: [
-    "https://via.placeholder.com/600x400?text=Destaques+1"
-  ]
-};
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #0f0f0f 0%, #1a1410 100%);
+      min-height: 85vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 20px;
+      position: relative;
+      overflow: hidden;
+    }
 
-function openGallery(type){
-  const modal = document.getElementById("gallery-modal");
-  const grid = document.getElementById("gallery-grid");
-  const title = document.getElementById("gallery-title");
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 20% 50%, rgba(212, 175, 119, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
 
-  grid.innerHTML="";
-  title.innerText = type.toUpperCase();
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+    }
 
-  galleries[type].forEach(img=>{
-    const image = document.createElement("img");
-    image.src = img;
-    grid.appendChild(image);
-  });
+    .hero-content h1 {
+      font-size: 4.5rem;
+      font-weight: 700;
+      margin-bottom: 30px;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      color: #f5f5f5;
+    }
 
-  modal.style.display="block";
-}
+    .hero-content p {
+      font-size: 1.4rem;
+      color: #aaa;
+      margin-bottom: 50px;
+      font-family: 'Segoe UI', sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+    }
 
-function closeGallery(){
-  document.getElementById("gallery-modal").style.display="none";
-}
-</script>
+    .hero-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
 
-</body>
+    /* Buttons */
+    .btn-primary {
+      background: #d4af77;
+      color: #0f0f0f;
+      border: 2px solid #d4af77;
+      padding: 14px 32px;
+      border-radius: 2px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .btn-primary:hover {
+      background: transparent;
+      color: #d4af77;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: #d4af77;
+      border: 2px solid #d4af77;
+      padding: 14px 32px;
+      border-radius: 2px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .btn-secondary:hover {
+      background: #d4af77;
+      color: #0f0f0f;
+      transform: translateY(-2px);
+    }
+
+    /* Positioning Section */
+    .positioning {
+      padding: 100px 20px;
+      background: linear-gradient(135deg, rgba(212, 175, 119, 0.02) 0%, #0f0f0f 100%);
+      text-align: center;
+      border-top: 1px solid rgba(212, 175, 119, 0.1);
+      border-bottom: 1px solid rgba(212, 175, 119, 0.1);
+    }
+
+    .positioning h2 {
+      font-size: 3rem;
+      margin-bottom: 40px;
+      line-height: 1.3;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .positioning-text {
+      font-size: 1.1rem;
+      color: #aaa;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.8;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* Section Title */
+    .section-title {
+      font-size: 1.3rem;
+      letter-spacing: 3px;
+      font-family: 'Segoe UI', sans-serif;
+      font-weight: 600;
+      color: #d4af77;
+      text-transform: uppercase;
+      margin-bottom: 60px;
+      text-align: center;
+    }
+
+    /* Portfolio */
+    .portfolio-section {
+      padding: 80px 20px;
+      background: #0f0f0f;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-bottom: 40px;
+    }
+
+    .portfolio-item {
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, rgba(212, 175, 119, 0.1), rgba(212, 175, 119, 0.05));
+      border: 1px solid rgba(212, 175, 119, 0.15);
+      border-radius: 2px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      position: relative;
+    }
+
+    .portfolio-item:hover {
+      border-color: rgba(212, 175, 119, 0.5);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(212, 175, 119, 0.1);
+    }
+
+    .portfolio-item-content {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .portfolio-item-content i {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 16px;
+      opacity: 0.6;
+      color: #d4af77;
+    }
+
+    .portfolio-item-content p {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #d4af77;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* Services Grid */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .service-card {
+      background: linear-gradient(135deg, rgba(212, 175, 119, 0.08) 0%, rgba(212, 175, 119, 0.02) 100%);
+      border: 1px solid rgba(212, 175, 119, 0.2);
+      padding: 2.5rem;
+      border-radius: 2px;
+      transition: all 0.4s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .service-card:hover {
+      border-color: rgba(212, 175, 119, 0.5);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(212, 175, 119, 0.1);
+    }
+
+    .service-icon {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 20px;
+      color: #d4af77;
+    }
+
+    .service-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+      color: #f5f5f5;
+    }
+
+    .service-description {
+      color: #999;
+      margin-bottom: 24px;
+      line-height: 1.6;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 0.95rem;
+      flex-grow: 1;
+    }
+
+    .service-details {
+      color: #666;
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+      line-height: 1.6;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .service-price {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: #d4af77;
+    }
+
+    .service-price span {
+      font-size: 0.6rem;
+      color: #999;
+      font-weight: 400;
+      display: block;
+      margin-top: 8px;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .business-text {
+      color: #999;
+      font-size: 1rem;
+      line-height: 1.8;
+      margin-bottom: 32px;
+      font-family: 'Segoe UI', sans-serif;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Page Sections */
+    .page-section {
+      padding: 80px 20px;
+      background: #0f0f0f;
+      border-top: 1px solid rgba(212, 175, 119, 0.1);
+    }
+
+    .section-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .about-text {
+      font-size: 1.1rem;
+      color: #aaa;
+      line-height: 1.8;
+      margin-bottom: 24px;
+      font-family: 'Segoe UI', sans-serif;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .contact-section {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .contact-text {
+      font-size: 1.1rem;
+      color: #aaa;
+      line-height: 1.8;
+      margin-bottom: 40px;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .contact-buttons {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+
+    .contact-socials {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      margin-top: 40px;
+    }
+
+    .social-link {
+      color: #d4af77;
+      text-decoration: none;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .social-link:hover {
+      color: #f5f5f5;
+    }
+
+    .social-link i {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* Sections Page Styles */
+    .ensaios-page {
+      padding: 60px 20px;
+      background: #0f0f0f;
+    }
+
+    .ensaios-hero {
+      max-width: 800px;
+      margin: 0 auto 80px;
+      text-align: center;
+    }
+
+    .ensaios-hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 30px;
+      line-height: 1.2;
+    }
+
+    .ensaios-hero p {
+      font-size: 1.2rem;
+      color: #aaa;
+      font-family: 'Segoe UI', sans-serif;
+      margin-bottom: 40px;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid rgba(212, 175, 119, 0.1);
+      padding: 40px 20px;
+      background: #0f0f0f;
+      text-align: center;
+      color: #666;
+      font-size: 0.85rem;
+      font-family: 'Segoe UI', sans-serif;
+      margin-top: auto;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      padding: 80px 20px;
+      background: linear-gradient(135deg, #1a1410 0%, #0f0f0f 100%);
+      text-align: center;
+      border-top: 1px solid rgba(212, 175, 119, 0.1);
+    }
+
+    .cta-text {
+      font-size: 2.5rem;
+      margin-bottom: 40px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.3;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .portfolio-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hero-content h1 {
+        font-size: 3.2rem;
+      }
+
+      .cta-text {
+        font-size: 2rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-menu {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .nav-menu.mobile-open {
+        display: flex;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        background: rgba(15, 15, 15, 0.99);
+        gap: 0;
+        padding: 20px;
+        border-bottom: 1px solid rgba(212, 175, 119, 0.15);
+      }
+
+      .nav-menu.mobile-open .nav-link {
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(212, 175, 119, 0.1);
+      }
+
+      .hero-content h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero-content p {
+        font-size: 1rem;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .hero-buttons button {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .positioning h2 {
+        font-size: 2rem;
+      }
+
+      .portfolio-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .ensaios-hero h1 {
+        font-size: 2.2rem;
+      }
+
+      .cta-text {
+        font-size: 1.8rem;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .cta-buttons button {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .contact-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .contact-buttons button {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .contact-socials {
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body>
+  <div id="app" class="app-wrapper"><!-- Navbar -->
+   <nav class="navbar">
+    <div class="navbar-content">
+     <div class="logo" id="navbar-name">
+      ANDRÉ SOUSA
+     </div>
+     <div class="nav-menu"><button class="nav-link active" onclick="navigateTo('home')">Início</button> <button class="nav-link" onclick="navigateTo('portfolio')">Portfólio</button> <button class="nav-link" onclick="navigateTo('ensaios')">Ensaios</button> <button class="nav-link" onclick="navigateTo('eventos')">Eventos</button> <button class="nav-link" onclick="navigateTo('negocios')">Negócios</button> <button class="nav-link" onclick="navigateTo('sobre')">Sobre</button> <button class="nav-link" onclick="navigateTo('contato')">Contato</button>
+     </div><button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i data-lucide="menu"></i></button>
+    </div>
+   </nav><!-- Main Content -->
+   <div class="main-content"><!-- HOME PAGE -->
+    <div id="home" class="page active">
+     <section class="hero">
+      <div class="hero-content">
+       <h1>Imagem não é detalhe.<br>
+        É posicionamento.</h1>
+       <p>Produção visual para negócios, marcas e pessoas que querem ser levadas a sério.</p>
+       <div class="hero-buttons"><button class="btn-primary" onclick="navigateTo('portfolio')">Ver Portfólio</button> <button class="btn-secondary" onclick="navigateTo('ensaios')">Ensaios Fotográficos</button> <button class="btn-secondary" onclick="navigateTo('eventos')">Eventos</button>
+       </div>
+      </div>
+     </section>
+     <section class="positioning">
+      <h2>Eu não produzo conteúdo por produzir.<br>
+       Eu construo presença visual.</h2>
+      <p class="positioning-text">Cada imagem comunica. Cada detalhe posiciona.</p>
+     </section>
+     <section class="cta-section">
+      <h2 class="cta-text">Se a sua imagem não representa o nível do seu trabalho, isso precisa mudar.</h2>
+      <div class="cta-buttons"><button class="btn-primary" onclick="redirectWhatsApp('Olá, gostaria de conversar sobre um projeto')">Falar no WhatsApp</button> <button class="btn-secondary" onclick="redirectWhatsApp('Quero solicitar um orçamento')">Solicitar Orçamento</button>
+      </div>
+     </section>
+    </div><!-- PORTFOLIO PAGE -->
+    <div id="portfolio" class="page">
+     <div class="portfolio-section">
+      <h2 class="section-title">PORTFÓLIO</h2>
+      <div class="portfolio-grid">
+       <div class="portfolio-item">
+        <div class="portfolio-item-content">
+         <i data-lucide="briefcase"></i>
+         <p>Negócios</p>
+        </div>
+       </div>
+       <div class="portfolio-item">
+        <div class="portfolio-item-content">
+         <i data-lucide="camera"></i>
+         <p>Ensaios</p>
+        </div>
+       </div>
+       <div class="portfolio-item">
+        <div class="portfolio-item-content">
+         <i data-lucide="zap"></i>
+         <p>Eventos</p>
+        </div>
+       </div>
+       <div class="portfolio-item">
+        <div class="portfolio-item-content">
+         <i data-lucide="play-circle"></i>
+         <p>Vídeos</p>
+        </div>
+       </div>
+       <div class="portfolio-item">
+        <div class="portfolio-item-content">
+         <i data-lucide="film"></i>
+         <p>Comerciais</p>
+        </div>
+       </div>
+       <div class="portfolio-item">
+        <div class="portfolio-item-content">
+         <i data-lucide="star"></i>
+         <p>Destaques</p>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div><!-- ENSAIOS PAGE -->
+    <div id="ensaios" class="page">
+     <div class="ensaios-page">
+      <div class="ensaios-hero">
+       <h1>Não é só sobre foto.<br>
+        É sobre como você se vê.</h1>
+       <p>Ensaios fotográficos profissionais que capturam sua melhor versão.</p>
+      </div>
+      <h2 class="section-title">PACOTES DE ENSAIOS</h2>
+      <div class="services-grid">
+       <div class="service-card"><i data-lucide="camera" class="service-icon"></i>
+        <h3>Essencial</h3>
+        <div class="service-description">
+         <strong>Sessão de até 1 hora</strong>
+         <div class="service-details">
+          • Até 50 fotos tratadas<br>
+           • Entrega digital<br>
+           • Edição completa
+         </div>
+        </div>
+        <div class="service-price">
+         R$ <span id="price-ensaio-essencial">1500</span><span>/ sessão</span>
+        </div><button class="btn-secondary" onclick="redirectWhatsApp('Olá, André! Quero agendar o Ensaio Essencial no valor de R$ ')">Quero Esse Ensaio</button>
+       </div>
+       <div class="service-card"><i data-lucide="star" class="service-icon"></i>
+        <h3>Premium</h3>
+        <div class="service-description">
+         <strong>Sessão expandida</strong>
+         <div class="service-details">
+          • Até 2 horas<br>
+           • Até 100 fotos tratadas<br>
+           • Direção completa
+         </div>
+        </div>
+        <div class="service-price">
+         R$ <span id="price-ensaio-premium">2500</span><span>/ sessão</span>
+        </div><button class="btn-secondary" onclick="redirectWhatsApp('Olá, André! Quero agendar o Ensaio Premium no valor de R$ ')">Quero Esse Ensaio</button>
+       </div>
+      </div>
+     </div>
+    </div><!-- EVENTOS PAGE -->
+    <div id="eventos" class="page">
+     <div class="ensaios-page">
+      <div class="ensaios-hero">
+       <h1>Momentos não voltam.<br>
+        Mas podem ser bem registrados.</h1>
+       <p>Cobertura profissional de eventos que preserva cada detalhe importante.</p>
+      </div>
+      <h2 class="section-title">PACOTES DE EVENTOS</h2>
+      <div class="services-grid">
+       <div class="service-card"><i data-lucide="video" class="service-icon"></i>
+        <h3>Cobertura Básica</h3>
+        <div class="service-description">
+         <strong>Até 4 horas</strong>
+         <div class="service-details">
+          • Fotografia profissional<br>
+           • Entrega digital<br>
+           • Edição completa
+         </div>
+        </div>
+        <div class="service-price">
+         R$ <span id="price-evento-basico">1800</span><span>/ evento</span>
+        </div><button class="btn-secondary" onclick="redirectWhatsApp('Olá, André! Tenho interesse na Cobertura Básica de evento no valor de R$ ')">Quero Esse Evento</button>
+       </div>
+       <div class="service-card"><i data-lucide="film" class="service-icon"></i>
+        <h3>Cobertura Completa</h3>
+        <div class="service-description">
+         <strong>Até 8 horas</strong>
+         <div class="service-details">
+          • Foto + vídeo profissional<br>
+           • Múltiplos ângulos<br>
+           • Edição e pós-produção
+         </div>
+        </div>
+        <div class="service-price">
+         R$ <span id="price-evento-completo">3500</span><span>/ evento</span>
+        </div><button class="btn-secondary" onclick="redirectWhatsApp('Olá, André! Tenho interesse na Cobertura Completa de evento no valor de R$ ')">Quero Esse Evento</button>
+       </div>
+      </div>
+     </div>
+    </div><!-- NEGÓCIOS PAGE -->
+    <div id="negocios" class="page">
+     <div class="page-section">
+      <div class="section-content">
+       <h2 class="section-title">PRODUÇÃO PARA NEGÓCIOS</h2>
+       <div style="max-width: 700px; margin: 0 auto;">
+        <p class="business-text">Projetos personalizados de acordo com a necessidade de cada negócio. Fotografia de produtos, vídeos corporativos, conteúdo para redes sociais, branding visual e muito mais.</p>
+        <p class="business-text">Trabalhamos com você para entender suas necessidades e criar uma estratégia visual que posiciona sua marca com autoridade.</p>
+        <div style="text-align: center; margin-top: 40px;"><button class="btn-primary" onclick="redirectWhatsApp('Olá, André! Quero solicitar um orçamento para produção visual.')">Solicitar Orçamento</button>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div><!-- SOBRE PAGE -->
+    <div id="sobre" class="page">
+     <div class="page-section">
+      <div class="section-content">
+       <h2 class="section-title">SOBRE</h2>
+       <p class="about-text" id="about-content">Sou André Sousa, produtor de vídeo e fotografia. Trabalho com construção de imagem para negócios e pessoas que querem ser percebidos de forma profissional. Atendo Cataguases, Leopoldina e Juiz de Fora.</p>
+      </div>
+     </div>
+    </div><!-- CONTATO PAGE -->
+    <div id="contato" class="page">
+     <div class="page-section">
+      <div class="contact-section">
+       <h2 class="section-title">CONTATO</h2>
+       <p class="contact-text">Vamos transformar sua imagem em posicionamento. Entre em contato através de um dos canais abaixo.</p>
+       <div class="contact-buttons"><button class="btn-primary" onclick="redirectWhatsApp('Olá, André! Gostaria de conversar sobre um projeto.')">Falar no WhatsApp</button> <button class="btn-secondary" onclick="redirectWhatsApp('Quero solicitar um orçamento')">Solicitar Orçamento</button>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div><!-- Footer -->
+   <footer>
+    <p>© 2024 André Sousa Produção Visual. Todos os direitos reservados.</p>
+   </footer>
+  </div>
+  <script>
+    const defaultConfig = {
+      producer_name: 'André Sousa',
+      whatsapp_number: '5585999999999',
+      locations: 'Cataguases, Leopoldina e Juiz de Fora',
+      ensaio_essencial_price: '1500',
+      ensaio_premium_price: '2500',
+      evento_basico_price: '1800',
+      evento_completo_price: '3500'
+    };
+
+    let config = { ...defaultConfig };
+    let currentPage = 'home';
+
+    async function initializeSDK() {
+      if (!window.elementSdk) return;
+
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (newConfig) => {
+          config = newConfig;
+          updateUI();
+        },
+        mapToCapabilities: (cfg) => ({
+          recolorables: [],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (cfg) => new Map([
+          ['producer_name', cfg.producer_name || defaultConfig.producer_name],
+          ['whatsapp_number', cfg.whatsapp_number || defaultConfig.whatsapp_number],
+          ['locations', cfg.locations || defaultConfig.locations],
+          ['ensaio_essencial_price', cfg.ensaio_essencial_price || defaultConfig.ensaio_essencial_price],
+          ['ensaio_premium_price', cfg.ensaio_premium_price || defaultConfig.ensaio_premium_price],
+          ['evento_basico_price', cfg.evento_basico_price || defaultConfig.evento_basico_price],
+          ['evento_completo_price', cfg.evento_completo_price || defaultConfig.evento_completo_price]
+        ])
+      });
+    }
+
+    function updateUI() {
+      document.getElementById('navbar-name').textContent = (config.producer_name || defaultConfig.producer_name).toUpperCase();
+      document.getElementById('price-ensaio-essencial').textContent = config.ensaio_essencial_price || defaultConfig.ensaio_essencial_price;
+      document.getElementById('price-ensaio-premium').textContent = config.ensaio_premium_price || defaultConfig.ensaio_premium_price;
+      document.getElementById('price-evento-basico').textContent = config.evento_basico_price || defaultConfig.evento_basico_price;
+      document.getElementById('price-evento-completo').textContent = config.evento_completo_price || defaultConfig.evento_completo_price;
+      document.getElementById('about-content').textContent = `Sou ${config.producer_name || defaultConfig.producer_name}, produtor de vídeo e fotografia. Trabalho com construção de imagem para negócios e pessoas que querem ser percebidos de forma profissional. Atendo ${config.locations || defaultConfig.locations}.`;
+
+      lucide.createIcons();
+    }
+
+    function navigateTo(pageId) {
+      // Hide all pages
+      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+      
+      // Show selected page
+      const selectedPage = document.getElementById(pageId);
+      if (selectedPage) {
+        selectedPage.classList.add('active');
+        currentPage = pageId;
+      }
+
+      // Update nav links
+      document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+      event.target.classList.add('active');
+
+      // Close mobile menu
+      document.querySelector('.nav-menu').classList.remove('mobile-open');
+
+      // Scroll to top
+      document.querySelector('.main-content').scrollTop = 0;
+
+      lucide.createIcons();
+    }
+
+    function toggleMobileMenu() {
+      const menu = document.querySelector('.nav-menu');
+      menu.classList.toggle('mobile-open');
+    }
+
+    function redirectWhatsApp(message) {
+      const encodedMessage = encodeURIComponent(message + document.querySelector(`#price-${getServiceId()}`).textContent);
+      const whatsappNumber = config.whatsapp_number || defaultConfig.whatsapp_number;
+      const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+
+      window.open(whatsappLink, '_blank', 'noopener noreferrer');
+    }
+
+    function getServiceId() {
+      if (currentPage === 'ensaios') return 'ensaio-essencial';
+      if (currentPage === 'eventos') return 'evento-basico';
+      return 'ensaio-essencial';
+    }
+
+    initializeSDK();
+    updateUI();
+    lucide.createIcons();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9dee2cbc14490c5f',t:'MTc3Mzk0MTEwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
