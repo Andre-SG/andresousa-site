@@ -6,206 +6,127 @@
 <title>André Sousa - Produção Visual</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
 
 <style>
 body {
-  font-family: 'Georgia', serif;
-  background: #0f0f0f;
-  color: #f5f5f5;
+  background:#0f0f0f;
+  color:#fff;
+  font-family: Arial;
 }
 
-/* NAVBAR */
-.navbar {
-  display:flex;
-  justify-content:space-between;
-  padding:20px;
-  border-bottom:1px solid rgba(212,175,119,0.2);
-}
-
-.nav-link {
-  margin-left:20px;
-  cursor:pointer;
-  color:#999;
-}
-
-.nav-link:hover {
-  color:#d4af77;
-}
-
-/* PAGES */
-.page { display:none; }
-.page.active { display:block; }
-
-/* HERO */
-.hero {
-  text-align:center;
-  padding:120px 20px;
-}
-
-.hero h1 {
-  font-size:3rem;
-}
-
-/* GRID */
+/* PORTFOLIO */
 .portfolio-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+  padding:40px;
+}
+
+.portfolio-item {
+  border:1px solid rgba(212,175,119,0.3);
+  padding:40px;
+  text-align:center;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.portfolio-item:hover {
+  transform:translateY(-5px);
+  border-color:#d4af77;
+}
+
+/* GALERIA */
+#gallery-modal {
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.95);
+  z-index:9999;
+  padding:40px;
+  overflow:auto;
+}
+
+#gallery-grid {
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
   gap:20px;
 }
 
-.portfolio-item {
-  cursor:pointer;
-  overflow:hidden;
-}
-
-.portfolio-img {
+#gallery-grid img {
   width:100%;
-  height:300px;
-  object-fit:cover;
-  transition:0.4s;
-}
-
-.portfolio-item:hover img {
-  transform:scale(1.1);
-}
-
-/* MODAL */
-#modal {
-  display:none;
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:black;
-  justify-content:center;
-  align-items:center;
-}
-
-#modal img {
-  max-width:90%;
-}
-
-/* BUTTON */
-.btn {
-  padding:12px 25px;
-  border:1px solid #d4af77;
-  color:#d4af77;
-  margin-top:20px;
-  display:inline-block;
-  cursor:pointer;
+  border-radius:6px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- NAV -->
-<div class="navbar">
-  <div>ANDRÉ SOUSA</div>
-  <div>
-    <span class="nav-link" onclick="go('home')">Início</span>
-    <span class="nav-link" onclick="go('portfolio')">Portfólio</span>
-    <span class="nav-link" onclick="go('contato')">Contato</span>
-  </div>
-</div>
+<h1 style="text-align:center; margin-top:40px;">PORTFÓLIO</h1>
 
-<!-- HOME -->
-<div id="home" class="page active">
-  <div class="hero">
-    <h1>Imagem não é detalhe.<br>É posicionamento.</h1>
-    <div class="btn" onclick="go('portfolio')">Ver Portfólio</div>
-  </div>
-</div>
+<div class="portfolio-grid">
 
-<!-- PORTFOLIO -->
-<div id="portfolio" class="page">
-  <h2 style="text-align:center;margin:40px;">PORTFÓLIO</h2>
+  <div class="portfolio-item" onclick="openGallery('negocios')">Negócios</div>
+  <div class="portfolio-item" onclick="openGallery('ensaios')">Ensaios</div>
+  <div class="portfolio-item" onclick="openGallery('eventos')">Eventos</div>
+  <div class="portfolio-item" onclick="openGallery('videos')">Vídeos</div>
+  <div class="portfolio-item" onclick="openGallery('comerciais')">Comerciais</div>
+  <div class="portfolio-item" onclick="openGallery('destaques')">Destaques</div>
 
-  <div class="portfolio-grid">
-
-    <div class="portfolio-item" onclick="go('negocios')">
-      <img src="https://picsum.photos/600?1" class="portfolio-img">
-    </div>
-
-    <div class="portfolio-item" onclick="go('ensaios')">
-      <img src="https://picsum.photos/600?2" class="portfolio-img">
-    </div>
-
-    <div class="portfolio-item" onclick="go('eventos')">
-      <img src="https://picsum.photos/600?3" class="portfolio-img">
-    </div>
-
-  </div>
-</div>
-
-<!-- GALERIA NEGOCIOS -->
-<div id="negocios" class="page">
-  <h2 style="text-align:center;margin:40px;">NEGÓCIOS</h2>
-
-  <div class="portfolio-grid">
-    <img src="https://picsum.photos/600?11" class="portfolio-img" onclick="zoom(this)">
-    <img src="https://picsum.photos/600?12" class="portfolio-img" onclick="zoom(this)">
-    <img src="https://picsum.photos/600?13" class="portfolio-img" onclick="zoom(this)">
-  </div>
-
-  <div class="btn" onclick="go('portfolio')">Voltar</div>
-</div>
-
-<!-- ENSAIOS -->
-<div id="ensaios" class="page">
-  <h2 style="text-align:center;margin:40px;">ENSAIOS</h2>
-
-  <div class="portfolio-grid">
-    <img src="https://picsum.photos/600?21" class="portfolio-img" onclick="zoom(this)">
-    <img src="https://picsum.photos/600?22" class="portfolio-img" onclick="zoom(this)">
-    <img src="https://picsum.photos/600?23" class="portfolio-img" onclick="zoom(this)">
-  </div>
-
-  <div class="btn" onclick="go('portfolio')">Voltar</div>
-</div>
-
-<!-- EVENTOS -->
-<div id="eventos" class="page">
-  <h2 style="text-align:center;margin:40px;">EVENTOS</h2>
-
-  <div class="portfolio-grid">
-    <img src="https://picsum.photos/600?31" class="portfolio-img" onclick="zoom(this)">
-    <img src="https://picsum.photos/600?32" class="portfolio-img" onclick="zoom(this)">
-    <img src="https://picsum.photos/600?33" class="portfolio-img" onclick="zoom(this)">
-  </div>
-
-  <div class="btn" onclick="go('portfolio')">Voltar</div>
-</div>
-
-<!-- CONTATO -->
-<div id="contato" class="page">
-  <h2 style="text-align:center;margin:40px;">CONTATO</h2>
-  <div class="btn" onclick="whats()">Falar no WhatsApp</div>
 </div>
 
 <!-- MODAL -->
-<div id="modal" onclick="closeModal()">
-  <img id="modal-img">
+<div id="gallery-modal">
+  <button onclick="closeGallery()" style="position:absolute; top:20px; right:30px; font-size:30px; background:none; border:none; color:white;">✕</button>
+
+  <h2 id="gallery-title" style="text-align:center; margin-bottom:30px;"></h2>
+
+  <div id="gallery-grid"></div>
 </div>
 
 <script>
-function go(page){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById(page).classList.add('active');
+const galleries = {
+  negocios: [
+    "https://via.placeholder.com/600x400?text=Negocios+1",
+    "https://via.placeholder.com/600x400?text=Negocios+2"
+  ],
+  ensaios: [
+    "https://via.placeholder.com/600x400?text=Ensaios+1",
+    "https://via.placeholder.com/600x400?text=Ensaios+2"
+  ],
+  eventos: [
+    "https://via.placeholder.com/600x400?text=Eventos+1"
+  ],
+  videos: [
+    "https://via.placeholder.com/600x400?text=Videos+1"
+  ],
+  comerciais: [
+    "https://via.placeholder.com/600x400?text=Comerciais+1"
+  ],
+  destaques: [
+    "https://via.placeholder.com/600x400?text=Destaques+1"
+  ]
+};
+
+function openGallery(type){
+  const modal = document.getElementById("gallery-modal");
+  const grid = document.getElementById("gallery-grid");
+  const title = document.getElementById("gallery-title");
+
+  grid.innerHTML="";
+  title.innerText = type.toUpperCase();
+
+  galleries[type].forEach(img=>{
+    const image = document.createElement("img");
+    image.src = img;
+    grid.appendChild(image);
+  });
+
+  modal.style.display="block";
 }
 
-function zoom(img){
-  document.getElementById('modal-img').src = img.src;
-  document.getElementById('modal').style.display = 'flex';
-}
-
-function closeModal(){
-  document.getElementById('modal').style.display = 'none';
-}
-
-function whats(){
-  window.open("https://wa.me/55SEUNUMERO");
+function closeGallery(){
+  document.getElementById("gallery-modal").style.display="none";
 }
 </script>
 
