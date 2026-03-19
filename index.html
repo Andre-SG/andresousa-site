@@ -329,6 +329,163 @@
       font-family: 'Segoe UI', sans-serif;
     }
 
+    /* Gallery Pages */
+    .gallery-page {
+      padding: 60px 20px;
+      background: #0f0f0f;
+    }
+
+    .gallery-hero {
+      max-width: 900px;
+      margin: 0 auto 60px;
+      text-align: center;
+    }
+
+    .gallery-hero h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .gallery-hero p {
+      font-size: 1rem;
+      color: #aaa;
+      font-family: 'Segoe UI', sans-serif;
+      margin-bottom: 40px;
+    }
+
+    .gallery-back-button {
+      display: inline-block;
+      margin-bottom: 40px;
+    }
+
+    .btn-back {
+      background: transparent;
+      color: #d4af77;
+      border: 2px solid #d4af77;
+      padding: 12px 28px;
+      border-radius: 2px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .btn-back:hover {
+      background: #d4af77;
+      color: #0f0f0f;
+      transform: translateY(-2px);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .gallery-image {
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, rgba(212, 175, 119, 0.1), rgba(212, 175, 119, 0.05));
+      border: 1px solid rgba(212, 175, 119, 0.15);
+      border-radius: 2px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+    }
+
+    .gallery-image:hover {
+      border-color: rgba(212, 175, 119, 0.5);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(212, 175, 119, 0.1);
+    }
+
+    .gallery-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gallery-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(212, 175, 119, 0.15), rgba(212, 175, 119, 0.08));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #d4af77;
+      font-size: 3rem;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-content {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content img {
+      max-width: 100%;
+      max-height: 90vh;
+      object-fit: contain;
+      border: 1px solid rgba(212, 175, 119, 0.2);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(212, 175, 119, 0.2);
+      border: none;
+      color: #d4af77;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      z-index: 1001;
+    }
+
+    .modal-close:hover {
+      background: rgba(212, 175, 119, 0.4);
+    }
+
+    .modal-close i {
+      width: 24px;
+      height: 24px;
+    }
+
     /* Services Grid */
     .services-grid {
       display: grid;
@@ -549,12 +706,20 @@
         grid-template-columns: repeat(2, 1fr);
       }
 
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
       .hero-content h1 {
         font-size: 3.2rem;
       }
 
       .cta-text {
         font-size: 2rem;
+      }
+
+      .gallery-hero h1 {
+        font-size: 2.5rem;
       }
     }
 
@@ -611,12 +776,20 @@
         grid-template-columns: 1fr;
       }
 
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+
       .services-grid {
         grid-template-columns: 1fr;
       }
 
       .ensaios-hero h1 {
         font-size: 2.2rem;
+      }
+
+      .gallery-hero h1 {
+        font-size: 1.8rem;
       }
 
       .cta-text {
@@ -646,6 +819,16 @@
       .contact-socials {
         flex-wrap: wrap;
         gap: 20px;
+      }
+
+      .gallery-back-button {
+        text-align: center;
+      }
+
+      .btn-back {
+        width: 100%;
+        max-width: 300px;
+        display: inline-block;
       }
     }
   </style>
@@ -689,37 +872,37 @@
      <div class="portfolio-section">
       <h2 class="section-title">PORTFÓLIO</h2>
       <div class="portfolio-grid">
-       <div class="portfolio-item">
+       <div class="portfolio-item" onclick="navigateTo('galeria-negocios')">
         <div class="portfolio-item-content">
          <i data-lucide="briefcase"></i>
          <p>Negócios</p>
         </div>
        </div>
-       <div class="portfolio-item">
+       <div class="portfolio-item" onclick="navigateTo('galeria-ensaios')">
         <div class="portfolio-item-content">
          <i data-lucide="camera"></i>
          <p>Ensaios</p>
         </div>
        </div>
-       <div class="portfolio-item">
+       <div class="portfolio-item" onclick="navigateTo('galeria-eventos')">
         <div class="portfolio-item-content">
          <i data-lucide="zap"></i>
          <p>Eventos</p>
         </div>
        </div>
-       <div class="portfolio-item">
+       <div class="portfolio-item" onclick="navigateTo('galeria-videos')">
         <div class="portfolio-item-content">
          <i data-lucide="play-circle"></i>
          <p>Vídeos</p>
         </div>
        </div>
-       <div class="portfolio-item">
+       <div class="portfolio-item" onclick="navigateTo('galeria-comerciais')">
         <div class="portfolio-item-content">
          <i data-lucide="film"></i>
          <p>Comerciais</p>
         </div>
        </div>
-       <div class="portfolio-item">
+       <div class="portfolio-item" onclick="navigateTo('galeria-destaques')">
         <div class="portfolio-item-content">
          <i data-lucide="star"></i>
          <p>Destaques</p>
@@ -727,6 +910,138 @@
        </div>
       </div>
      </div>
+    </div><!-- GALERIA NEGÓCIOS -->
+    <div id="galeria-negocios" class="page">
+      <div class="gallery-page">
+        <div class="gallery-back-button">
+          <button class="btn-back" onclick="navigateTo('portfolio')">← Voltar</button>
+        </div>
+        <div class="gallery-hero">
+          <h1>Galeria de Negócios</h1>
+          <p>Produção visual profissional para empresas e marcas</p>
+        </div>
+        <div class="gallery-grid" id="galeria-negocios-grid">
+          <div class="gallery-image" onclick="openModal(this)">
+            <div class="gallery-placeholder">📷</div>
+          </div>
+          <div class="gallery-image" onclick="openModal(this)">
+            <div class="gallery-placeholder">📷</div>
+          </div>
+          <div class="gallery-image" onclick="openModal(this)">
+            <div class="gallery-placeholder">📷</div>
+          </div>
+        </div>
+      </div>
+    </div><!-- GALERIA ENSAIOS -->
+    <div id="galeria-ensaios" class="page">
+      <div class="gallery-page">
+        <div class="gallery-back-button">
+          <button class="btn-back" onclick="navigateTo('portfolio')">← Voltar</button>
+        </div>
+        <div class="gallery-hero">
+          <h1>Galeria de Ensaios</h1>
+          <p>Ensaios fotográficos profissionais</p>
+        </div>
+        <div class="gallery-grid" id="galeria-ensaios-grid">
+          <div class="gallery-image" onclick="openModal(this)">
+            <div class="gallery-placeholder">📷</div>
+          </div>
+          <div class="gallery-image" onclick="openModal(this)">
+            <div class="gallery-placeholder">📷</div>
+          </div>
+          <div class="gallery-image" onclick="openModal(this)">
+            <div class="gallery-placeholder">📷</div>
+          </div>
+        </div>
+      </div>
+    </div><!-- GALERIA EVENTOS -->
+    <div id="galeria-eventos" class="page">
+      <div class="gallery-page">
+        <div class="gallery-back-button">
+          <button class="btn-back" onclick="navigateTo('portfolio')">← Voltar</button>
+        </div>
+        <div class="gallery-hero">
+          <h1>Galeria de Eventos</h1>
+          <p>Cobertura profissional de eventos</p>
+        </div>
+        <div class="gallery-grid" id="galeria-eventos-grid">
+          <div class="gallery-image" onclick="openModal(this)">
+            <div class="gallery-placeholder">📷</div>
+          </div>
+          <div class="gallery-image" onclick="openModal(this)">
+            <div class="gallery-placeholder">📷</div>
+          </div>
+          <div class="gallery-image" onclick="openModal(this)">
+            <div class="gallery-placeholder">📷</div>
+          </div>
+        </div>
+      </div>
+    </div><!-- GALERIA VÍDEOS -->
+    <div id="galeria-videos" class="page">
+      <div class="gallery-page">
+        <div class="gallery-back-button">
+          <button class="btn-back" onclick="navigateTo('portfolio')">← Voltar</button>
+        </div>
+        <div class="gallery-hero">
+          <h1>Galeria de Vídeos</h1>
+          <p>Produção de vídeos profissionais</p>
+        </div>
+        <div class="gallery-grid" id="galeria-videos-grid">
+          <div class="gallery-image" onclick="openModal(this)">
+            <div class="gallery-placeholder">📷</div>
+          </div>
+          <div class="gallery-image" onclick="openModal(this)">
+            <div class="gallery-placeholder">📷</div>
+          </div>
+          <div class="gallery-image" onclick="openModal(this)">
+            <div class="gallery-placeholder">📷</div>
+          </div>
+        </div>
+      </div>
+    </div><!-- GALERIA COMERCIAIS -->
+    <div id="galeria-comerciais" class="page">
+      <div class="gallery-page">
+        <div class="gallery-back-button">
+          <button class="btn-back" onclick="navigateTo('portfolio')">← Voltar</button>
+        </div>
+        <div class="gallery-hero">
+          <h1>Galeria de Comerciais</h1>
+          <p>Produção de comerciais profissionais</p>
+        </div>
+        <div class="gallery-grid" id="galeria-comerciais-grid">
+          <div class="gallery-image" onclick="openModal(this)">
+            <div class="gallery-placeholder">📷</div>
+          </div>
+          <div class="gallery-image" onclick="openModal(this)">
+            <div class="gallery-placeholder">📷</div>
+          </div>
+          <div class="gallery-image" onclick="openModal(this)">
+            <div class="gallery-placeholder">📷</div>
+          </div>
+        </div>
+      </div>
+    </div><!-- GALERIA DESTAQUES -->
+    <div id="galeria-destaques" class="page">
+      <div class="gallery-page">
+        <div class="gallery-back-button">
+          <button class="btn-back" onclick="navigateTo('portfolio')">← Voltar</button>
+        </div>
+        <div class="gallery-hero">
+          <h1>Galeria de Destaques</h1>
+          <p>Melhores trabalhos e projetos selecionados</p>
+        </div>
+        <div class="gallery-grid" id="galeria-destaques-grid">
+          <div class="gallery-image" onclick="openModal(this)">
+            <div class="gallery-placeholder">📷</div>
+          </div>
+          <div class="gallery-image" onclick="openModal(this)">
+            <div class="gallery-placeholder">📷</div>
+          </div>
+          <div class="gallery-image" onclick="openModal(this)">
+            <div class="gallery-placeholder">📷</div>
+          </div>
+        </div>
+      </div>
     </div><!-- ENSAIOS PAGE -->
     <div id="ensaios" class="page">
      <div class="ensaios-page">
@@ -839,6 +1154,14 @@
       </div>
      </div>
     </div>
+   </div><!-- Modal Overlay -->
+   <div class="modal-overlay" id="imageModal">
+     <button class="modal-close" onclick="closeModal()">
+       <i data-lucide="x"></i>
+     </button>
+     <div class="modal-content" onclick="event.stopPropagation()">
+       <img id="modalImage" src="" alt="Imagem em tamanho completo">
+     </div>
    </div><!-- Footer -->
    <footer>
     <p>© 2024 André Sousa Produção Visual. Todos os direitos reservados.</p>
@@ -938,6 +1261,52 @@
       if (currentPage === 'eventos') return 'evento-basico';
       return 'ensaio-essencial';
     }
+
+    // Modal Functions
+    function openModal(element) {
+      const modal = document.getElementById('imageModal');
+      const modalImage = document.getElementById('modalImage');
+      
+      // Check if element has an img tag
+      const imgElement = element.querySelector('img');
+      
+      if (imgElement) {
+        modalImage.src = imgElement.src;
+        modalImage.alt = imgElement.alt;
+      } else {
+        // If no image, use a placeholder
+        modalImage.src = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22400%22%3E%3Crect fill=%22%231a1410%22 width=%22400%22 height=%22400%22/%3E%3C/svg%3E';
+        modalImage.alt = 'Imagem não disponível';
+      }
+      
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('imageModal');
+      modal.classList.remove('open');
+      document.body.style.overflow = 'auto';
+    }
+
+    // Close modal when clicking on overlay
+    document.addEventListener('DOMContentLoaded', function() {
+      const modal = document.getElementById('imageModal');
+      if (modal) {
+        modal.addEventListener('click', function(e) {
+          if (e.target === modal) {
+            closeModal();
+          }
+        });
+      }
+      
+      // Close modal with Escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          closeModal();
+        }
+      });
+    });
 
     initializeSDK();
     updateUI();
